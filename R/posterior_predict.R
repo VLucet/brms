@@ -128,7 +128,11 @@ posterior_predict.brmsdraws <- function(object, transform = NULL, sort = FALSE,
   pp_fun <- paste0("posterior_predict_", object$family$fun)
   pp_fun <- get(pp_fun, asNamespace("brms"))
   N <- choose_N(object)
-  out <- parralel::mclapply(seq_len(N), pp_fun, draws = object, ...)
+  if (getOption("mc.cores", 2L) > 2){
+   out <- parralel::mclapply(seq_len(N), pp_fun, draws = object, ...)
+    } else {
+   out <- lapply(seq_len(N), pp_fun, draws = object, ...)
+  }
   if (grepl("_mv$", object$family$fun)) {
     out <- do_call(abind, c(out, along = 3))
     out <- aperm(out, perm = c(1, 3, 2))
