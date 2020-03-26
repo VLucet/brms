@@ -131,7 +131,7 @@ posterior_predict.brmsdraws <- function(object, transform = NULL, sort = FALSE,
   if (getOption("mc.cores", 2L) > 2){
     print("Testing parallel::mclapply")
     print(paste0("Number of cores: ", getOption("mc.cores")))
-    out <- parallel::mclapply(seq_len(N), pp_fun, draws = object, ...)
+    out <- parallel::mclapply(seq_len(N), pp_fun, draws = object, mc.preschedule = FALSE, ...)
     } else {
     out <- lapply(seq_len(N), pp_fun, draws = object, ...)
   }
